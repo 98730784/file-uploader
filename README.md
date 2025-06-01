@@ -64,11 +64,44 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 To use this application with your own Tigirus S3 buckets, you'll need to set up the following environment variables:
 
 ```
-TIGIRUS_ACCESS_KEY_ID=your_access_key
-TIGIRUS_SECRET_ACCESS_KEY=your_secret_key
-TIGIRUS_REGION=your_region
-TIGIRUS_BUCKET_NAME=your_bucket_name
+AWS_ACCESS_KEY_ID=your_access_key
+AWS_SECRET_ACCESS_KEY=your_secret_key
+AWS_ENDPOINT_URL_S3=your_s3_endpoint_url
+AWS_ENDPOINT_URL_IAM=your_iam_endpoint_url
+AWS_REGION=your_region
+S3_BUCKET_NAME=your_bucket_name
 ```
+
+Note: Despite the "AWS_" prefix, these variables are used to configure the connection to Tigirus S3 storage, which uses the AWS S3 API.
+
+## Deployment with GitHub Actions
+
+This project includes a GitHub Actions workflow for automatic deployment to Vercel. When you push changes to the main branch, the workflow will build and deploy your application to Vercel.
+
+### Setting Up GitHub Secrets
+
+To use the GitHub Actions workflow, you need to set up the following secrets in your GitHub repository:
+
+1. **Vercel Deployment Secrets**:
+   - `VERCEL_TOKEN`: Your Vercel API token
+   - `VERCEL_ORG_ID`: Your Vercel organization ID
+   - `VERCEL_PROJECT_ID`: Your Vercel project ID
+
+2. **S3 Configuration Secrets**:
+   - `AWS_ACCESS_KEY_ID`: Your Tigirus/AWS access key
+   - `AWS_SECRET_ACCESS_KEY`: Your Tigirus/AWS secret key
+   - `AWS_ENDPOINT_URL_S3`: Your S3 endpoint URL
+   - `AWS_ENDPOINT_URL_IAM`: Your IAM endpoint URL
+   - `AWS_REGION`: Your region
+   - `S3_BUCKET_NAME`: Your bucket name
+
+### How to Get Vercel Deployment Values
+
+1. Install Vercel CLI: `npm i -g vercel`
+2. Run `vercel login` and follow the instructions
+3. Run `vercel link` to link your local project to a Vercel project
+4. The Vercel project ID and org ID will be saved in the `.vercel` directory
+5. Create a Vercel token in your Vercel account settings
 
 ## Learn More
 
@@ -77,3 +110,5 @@ To learn more about the technologies used in this project:
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Tigirus S3 Documentation](https://docs.tigirus.com/s3/)
 - [React Dropzone](https://react-dropzone.js.org/)
+- [Vercel Deployment](https://vercel.com/docs/deployments/overview)
+- [GitHub Actions](https://docs.github.com/en/actions)
