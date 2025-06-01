@@ -202,6 +202,13 @@ export function Uploader() {
                   ></div>
                 </div>
               )}
+              {file.error && (
+                  <div className={"absolute inset-0 bg-red-500/50 flex items-center justify-center"}>
+                    <p className={"text-white font-medium text-lg"}>
+                      Error
+                    </p>
+                  </div>
+              )}
             </CardContent>
           </Card>
         ))}
