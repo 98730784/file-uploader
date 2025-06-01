@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useState } from "react";
+import { toNamespacedPath } from "path";
 
 export type FileUpload = {
   id: string;
@@ -69,10 +70,93 @@ export function Uploader() {
     },
   });
 
-  const uploadFile = (file: File) => {
+  const uploadFile = async (file: File) => {
     setFiles((prevFiles) =>
       prevFiles.map((f) => (f.file === file ? { ...f, uploading: true } : f))
     );
+
+    try {
+      const presignedUrlResponse = await fetch("/api/s3/upload", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fileName: file.name,
+          contentType: file.type,
+          size: file.size,
+        }),
+      });
+      if (!presignedUrlResponse.ok) {
+        toast.error(
+          `Failed to get presigned URL for ${file.name}. Please try again.`
+        );
+        setFiles((prevFiles) =>
+          prevFiles.map((f) =>
+            f.file === file
+              ? { ...f, uploading: false, progress: 0, error: true }
+              : f
+          )
+        );
+        return;
+      }
+
+      const { presinedUrl, key } = await presignedUrlResponse.json();
+      await new Promise<void>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.upload.onprogress = (event) => {
+          if (event.lengthComputable) {
+            const percentage = (event.loaded / event.total) * 100;
+            setFiles((prevFiles) =>
+              prevFiles.map((f) =>
+                f.file === file
+                  ? { ...f, progress: Math.round(percentage), key: key }
+                  : f
+              )
+            );
+          }
+        };
+        xhr.onload = () => {
+          if (xhr.status === 200 || xhr.status === 204) {
+            setFiles((prevFiles) =>
+              prevFiles.map((f) =>
+                f.file === file
+                  ? { ...f, progress: 100, uploading: false, error: false }
+                  : f
+              )
+            );
+            toast.success(`File ${file.name} uploaded successfully.`);
+            resolve();
+          } else {
+            reject(
+              new Error(
+                `Failed to upload file ${file.name}. Status: ${xhr.status}`
+              )
+            );
+          }
+        };
+
+        xhr.onerror = () => {
+          reject(new Error(`Network error while uploading file ${file.name}.`));
+        };
+        xhr.open("PUT", presinedUrl);
+        xhr.setRequestHeader("Content-Type", file.type);
+        xhr.send(file);
+      });
+    } catch (error) {
+      toast.error(
+        `Error uploading file ${file.name}: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
+      setFiles((prevFiles) =>
+        prevFiles.map((f) =>
+          f.file === file
+            ? { ...f, uploading: false, progress: 0, error: true }
+            : f
+        )
+      );
+    }
   };
 
   return (
