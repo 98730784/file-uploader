@@ -18,6 +18,7 @@ export type FileUpload = {
   error: boolean;
   objectUrl?: string;
 };
+
 export function Uploader() {
   const [files, setFiles] = useState<Array<FileUpload>>([]);
   const onDrop = useCallback((files: File[]) => {
@@ -69,6 +70,23 @@ export function Uploader() {
       "text/plain": [".txt"],
     },
   });
+
+  const deleteFile = async (fileId: string) => {
+    try {
+      const removedFile = files.find((f) => f.id === fileId);
+      if (removedFile) {
+        if (removedFile.objectUrl) {
+          URL.revokeObjectURL(removedFile.objectUrl);
+        }
+      }
+    } catch (error) {
+      toast.error(
+        `Error deleting file: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
+    }
+  };
 
   const uploadFile = async (file: File) => {
     setFiles((prevFiles) =>
@@ -203,11 +221,13 @@ export function Uploader() {
                 </div>
               )}
               {file.error && (
-                  <div className={"absolute inset-0 bg-red-500/50 flex items-center justify-center"}>
-                    <p className={"text-white font-medium text-lg"}>
-                      Error
-                    </p>
-                  </div>
+                <div
+                  className={
+                    "absolute inset-0 bg-red-500/50 flex items-center justify-center"
+                  }
+                >
+                  <p className={"text-white font-medium text-lg"}>Error</p>
+                </div>
               )}
             </CardContent>
           </Card>
