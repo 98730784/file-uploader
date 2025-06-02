@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useState } from "react";
 import { toNamespacedPath } from "path";
+import { Loader2, Trash2 } from "lucide-react";
 
 export type FileUpload = {
   id: string;
@@ -79,11 +80,41 @@ export function Uploader() {
           URL.revokeObjectURL(removedFile.objectUrl);
         }
       }
+
+      setFiles((prevFiles) =>
+        prevFiles.map((f) => (f.id === fileId ? { ...f, isDeleted: true } : f))
+      );
+      const response = await fetch("/api/s3/delete", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ key: removedFile?.key }),
+      });
+      if (!response.ok) {
+        toast.error(
+          `Failed to delete file ${removedFile?.file.name}. Please try again.`
+        );
+        setFiles((prevFiles) =>
+          prevFiles.map((f) =>
+            f.id === fileId ? { ...f, isDeleted: false, error: false } : f
+          )
+        );
+        return;
+      }
+
+      toast.success(`File ${removedFile?.file.name} deleted successfully.`);
+      setFiles((prevFiles) => prevFiles.filter((f) => f.id !== fileId));
     } catch (error) {
       toast.error(
         `Error deleting file: ${
           error instanceof Error ? error.message : "Unknown error"
         }`
+      );
+      setFiles((prevFiles) =>
+        prevFiles.map((f) =>
+          f.id === fileId ? { ...f, isDeleted: false, error: true } : f
+        )
       );
     }
   };
@@ -211,6 +242,19 @@ export function Uploader() {
                 alt={file.file.name}
                 className="w-full h-32 object-cover"
               />
+              <Button
+                size={"icon"}
+                variant="destructive"
+                className="absolute top-2 right-2"
+                onClick={() => deleteFile(file.id)}
+                disabled={file.uploading || file.isDeleted}
+              >
+                {file.isDeleted ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  <Trash2 className="h-4 w-4" />
+                )}
+              </Button>
               <p className="text-sm mt-2">{file.file.name}</p>
               {file.uploading && (
                 <div className="w-full mt-2">

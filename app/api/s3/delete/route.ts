@@ -7,7 +7,7 @@ import { z } from "zod";
 export async function DELETE(req: Request) {
   try {
     const body = await req.json();
-    const key = body.get("key");
+    const key = body.key;
     if (!key) {
       return new Response("Key is required", { status: 400 });
     }
