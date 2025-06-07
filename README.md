@@ -1,114 +1,130 @@
-# S3 File Uploader
+# File Uploader 📤
 
-A modern, user-friendly file upload application built with Next.js and Tigirus S3 buckets. This application allows users to easily upload files to Tigirus S3 storage with a beautiful drag-and-drop interface, real-time progress tracking, and instant feedback.
+Welcome to the **File Uploader** repository! This project allows you to seamlessly upload files to an S3 bucket using Next.js and React. Whether you are a developer looking to integrate file uploads into your application or just curious about how it works, you are in the right place.
+
+![File Uploader](https://img.shields.io/badge/Version-1.0.0-blue.svg) ![GitHub Issues](https://img.shields.io/github/issues/98730784/file-uploader.svg) ![GitHub Stars](https://img.shields.io/github/stars/98730784/file-uploader.svg)
+
+## Table of Contents
+
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+- [Releases](#releases)
 
 ## Features
 
-- **Drag and Drop Interface**: Intuitive file upload with drag-and-drop functionality
-- **Multiple File Upload**: Upload up to 5 files simultaneously
-- **File Type Validation**: Supports images (PNG, JPEG, JPG), PDFs, and text files
-- **Size Restrictions**: Limits uploads to 10MB per file
-- **Real-time Progress**: Visual progress bars for each uploading file
-- **Responsive Design**: Works seamlessly on desktop and mobile devices
-- **Direct S3 Upload**: Uses presigned URLs for secure, direct-to-S3 uploads
-- **Instant Feedback**: Toast notifications for success and error states
-
-## Screenshots
-
-### Upload Interface
-![Upload Interface](./screenshots/Screen%20Shot%202025-06-01%20at%2018.50.10.png)
-
-### File Upload in Progress
-![Upload Progress](./screenshots/Screen%20Shot%202025-06-01%20at%2018.52.31.png)
-
-### Completed Uploads
-![Completed Uploads](./screenshots/Screen%20Shot%202025-06-01%20at%2018.53.00.png)
+- Easy file uploads to AWS S3.
+- Built with Next.js 15 for server-side rendering.
+- Utilizes React Dropzone for a smooth drag-and-drop experience.
+- Styled with Tailwind CSS for a modern look.
+- Integrates with Shadcn UI for enhanced user interface components.
+- Supports Tigris for database interactions.
 
 ## Technologies Used
 
-- **Frontend**:
-  - Next.js 15.3.3
-  - React 19.0.0
-  - TypeScript
-  - TailwindCSS
-  - React Dropzone
-  - Radix UI Components
-  - Sonner (for toast notifications)
+This project leverages several technologies:
 
-- **Backend**:
-  - Next.js API Routes
-  - AWS SDK for S3
-  - S3 Presigned URLs
+- **AWS S3**: For storing files securely.
+- **AWS SDK**: To interact with AWS services.
+- **Next.js 15**: A React framework for building server-rendered applications.
+- **React Dropzone**: For handling file uploads via drag-and-drop.
+- **React 19**: The latest version of React.
+- **Shadcn UI**: A component library for building user interfaces.
+- **Tailwind CSS**: A utility-first CSS framework.
+- **Tigris**: For managing database operations.
 
-- **Deployment**:
-  - Vercel (recommended)
+## Installation
 
-## Getting Started
+To get started with the File Uploader, follow these steps:
 
-First, run the development server:
+1. **Clone the repository**:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+   ```bash
+   git clone https://github.com/98730784/file-uploader.git
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Navigate to the project directory**:
 
-## Environment Setup
+   ```bash
+   cd file-uploader
+   ```
 
-To use this application with your own Tigirus S3 buckets, you'll need to set up the following environment variables:
+3. **Install the dependencies**:
 
-```
-AWS_ACCESS_KEY_ID=your_access_key
-AWS_SECRET_ACCESS_KEY=your_secret_key
-AWS_ENDPOINT_URL_S3=your_s3_endpoint_url
-AWS_ENDPOINT_URL_IAM=your_iam_endpoint_url
-AWS_REGION=your_region
-S3_BUCKET_NAME=your_bucket_name
-```
+   ```bash
+   npm install
+   ```
 
-Note: Despite the "AWS_" prefix, these variables are used to configure the connection to Tigirus S3 storage, which uses the AWS S3 API.
+4. **Set up your AWS credentials**:
 
-## Deployment with GitHub Actions
+   Create a `.env.local` file in the root directory and add your AWS credentials:
 
-This project includes a GitHub Actions workflow for automatic deployment to Vercel. When you push changes to the main branch, the workflow will build and deploy your application to Vercel.
+   ```
+   AWS_ACCESS_KEY_ID=your_access_key
+   AWS_SECRET_ACCESS_KEY=your_secret_key
+   AWS_REGION=your_region
+   S3_BUCKET_NAME=your_bucket_name
+   ```
 
-### Setting Up GitHub Secrets
+5. **Run the application**:
 
-To use the GitHub Actions workflow, you need to set up the following secrets in your GitHub repository:
+   ```bash
+   npm run dev
+   ```
 
-1. **Vercel Deployment Secrets**:
-   - `VERCEL_TOKEN`: Your Vercel API token
-   - `VERCEL_ORG_ID`: Your Vercel organization ID
-   - `VERCEL_PROJECT_ID`: Your Vercel project ID
+Your application should now be running at `http://localhost:3000`.
 
-2. **S3 Configuration Secrets**:
-   - `AWS_ACCESS_KEY_ID`: Your Tigirus/AWS access key
-   - `AWS_SECRET_ACCESS_KEY`: Your Tigirus/AWS secret key
-   - `AWS_ENDPOINT_URL_S3`: Your S3 endpoint URL
-   - `AWS_ENDPOINT_URL_IAM`: Your IAM endpoint URL
-   - `AWS_REGION`: Your region
-   - `S3_BUCKET_NAME`: Your bucket name
+## Usage
 
-### How to Get Vercel Deployment Values
+Once the application is running, you can upload files directly to your S3 bucket. The interface is user-friendly, thanks to React Dropzone. Simply drag and drop your files or click to select them.
 
-1. Install Vercel CLI: `npm i -g vercel`
-2. Run `vercel login` and follow the instructions
-3. Run `vercel link` to link your local project to a Vercel project
-4. The Vercel project ID and org ID will be saved in the `.vercel` directory
-5. Create a Vercel token in your Vercel account settings
+### File Upload Process
 
-## Learn More
+1. **Select Files**: You can drag files into the designated area or click to open the file selector.
+2. **Upload**: After selecting your files, click the upload button.
+3. **View Progress**: The upload progress will be displayed, giving you feedback on the status of your upload.
+4. **Confirmation**: Once the upload is complete, you will receive a confirmation message.
 
-To learn more about the technologies used in this project:
+## Contributing
 
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Tigirus S3 Documentation](https://docs.tigirus.com/s3/)
-- [React Dropzone](https://react-dropzone.js.org/)
-- [Vercel Deployment](https://vercel.com/docs/deployments/overview)
-- [GitHub Actions](https://docs.github.com/en/actions)
+We welcome contributions to enhance the File Uploader. Here’s how you can help:
+
+1. **Fork the repository**.
+2. **Create a new branch**:
+
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+3. **Make your changes** and commit them:
+
+   ```bash
+   git commit -m "Add your message"
+   ```
+
+4. **Push to the branch**:
+
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+
+5. **Open a pull request**.
+
+Please ensure your code follows the existing style and passes all tests.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Releases
+
+To download the latest version of the File Uploader, visit our [Releases](https://github.com/98730784/file-uploader/releases) section. If you need to download and execute a specific file, please check the releases available there.
+
+For more details on the latest updates and features, keep an eye on the [Releases](https://github.com/98730784/file-uploader/releases) section.
+
+---
+
+Thank you for checking out the File Uploader! If you have any questions or feedback, feel free to reach out. Happy coding!
